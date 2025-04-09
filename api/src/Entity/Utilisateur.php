@@ -6,29 +6,37 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur
+class Utilisateur implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getUtilisateurs"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(["getUtilisateurs"])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(["getUtilisateurs"])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 200)]
+    #[Groups(["getUtilisateurs"])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["setUtilisateurs"])]
     private ?string $mdp = null;
 
     #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getUtilisateurs"])]
     private ?role $id_role = null;
 
     /**
@@ -93,6 +101,11 @@ class Utilisateur
         $this->mdp = $mdp;
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->mdp;
     }
 
     public function getIdRole(): ?role
