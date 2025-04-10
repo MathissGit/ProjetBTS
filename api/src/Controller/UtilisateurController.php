@@ -75,11 +75,23 @@ final class UtilisateurController extends AbstractController
     public function updateUtilisateur(Request $request, SerializerInterface $serializer, Utilisateur $currentUtilisateur, EntityManagerInterface $em): JsonResponse 
     {
         $updateUtilisateur = $serializer->deserialize($request->getContent(), Utilisateur::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $currentUtilisateur]);
-        // $content = $request->toArray();
         
         $em->persist($updateUtilisateur);
         $em->flush();
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+   }
+   
+   // modifier un mot de passe 
+   #[Route('/api/utilisateurs/{id}/password', name:"updateUtilisateursPassword", methods:['PUT'])]
+   public function updateUtilisateurPassword(Request $request, SerializerInterface $serializer, Utilisateur $currentUtilisateur, EntityManagerInterface $em): JsonResponse 
+   {
+    $updateUtilisateurPassword = $serializer->deserialize($request->getContent(), Utilisateur::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $currentUtilisateur], ['groups' => 'setUtilisateurPassword']);
+
+    // TODO: Hashage de mot de passe et verification du mot de passe avant l'update 
+
+    $em->persist($updateUtilisateurPassword);
+    $em->flush();
+    return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
    }
 
 }

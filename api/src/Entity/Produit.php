@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -31,6 +33,17 @@ class Produit
     #[ORM\Column]
     #[Groups(["getProduits"])]
     private ?int $stock = null;
+
+    /**
+     * @var Collection<int, DetailReservation>
+     */
+    #[ORM\OneToMany(targetEntity: DetailReservation::class, mappedBy: 'idProduit')]
+    private Collection $detailReservations;
+
+    public function __construct()
+    {
+        $this->detailReservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,6 +94,36 @@ class Produit
     public function setStock(int $stock): static
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DetailReservation>
+     */
+    public function getDetailReservations(): Collection
+    {
+        return $this->detailReservations;
+    }
+
+    public function addDetailReservation(DetailReservation $detailReservation): static
+    {
+        if (!$this->detailReservations->contains($detailReservation)) {
+            $this->detailReservations->add($detailReservation);
+            $detailReservation->setIdProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetailReservation(DetailReservation $detailReservation): static
+    {
+        if ($this->detailReservations->removeElement($detailReservation)) {
+            // set the owning side to null (unless already changed)
+            if ($detailReservation->getIdProduit() === $this) {
+                $detailReservation->setIdProduit(null);
+            }
+        }
 
         return $this;
     }

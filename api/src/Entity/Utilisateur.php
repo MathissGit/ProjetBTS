@@ -19,19 +19,19 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(["getUtilisateurs"])]
+    #[Groups(["getUtilisateurs", "setUtilisateur"])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(["getUtilisateurs"])]
+    #[Groups(["getUtilisateurs", "setUtilisateur"])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 200)]
-    #[Groups(["getUtilisateurs"])]
+    #[Groups(["getUtilisateurs", "setUtilisateur"])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["setUtilisateurs"])]
+    #[Groups(["setUtilisateurPassword"])]
     private ?string $mdp = null;
 
     #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
