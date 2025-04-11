@@ -40,6 +40,10 @@ class Produit
     #[ORM\OneToMany(targetEntity: DetailReservation::class, mappedBy: 'idProduit')]
     private Collection $detailReservations;
 
+    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['getProduits', 'getImageURL'])]
+    private ?string $imageURL = null;
+
     public function __construct()
     {
         $this->detailReservations = new ArrayCollection();
@@ -124,6 +128,18 @@ class Produit
                 $detailReservation->setIdProduit(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageURL(): ?string
+    {
+        return $this->imageURL;
+    }
+
+    public function setImageURL(string $imageURL): static
+    {
+        $this->imageURL = $imageURL;
 
         return $this;
     }

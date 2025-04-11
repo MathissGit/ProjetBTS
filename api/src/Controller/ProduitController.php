@@ -69,4 +69,10 @@ final class ProduitController extends AbstractController
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
+    #[Route('/api/produits/{id}/image', name: 'getProduitImageURL', methods: ['GET'])]
+    public function getProduitImageURL(Produit $produit, SerializerInterface $serializer): JsonResponse
+    {
+        $jsonProduit = $serializer->serialize($produit, 'json', ['groups' => 'getImageURL']);
+        return new JsonResponse($jsonProduit, Response::HTTP_OK, [], true);
+    }
 }
