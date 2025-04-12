@@ -15,19 +15,19 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getUtilisateurs"])]
+    #[Groups(["getUtilisateurs", "getReservation"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(["getUtilisateurs", "setUtilisateur"])]
+    #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
     private ?string $nom = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(["getUtilisateurs", "setUtilisateur"])]
+    #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 200)]
-    #[Groups(["getUtilisateurs", "setUtilisateur"])]
+    #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]

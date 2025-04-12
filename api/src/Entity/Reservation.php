@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -14,13 +15,16 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getReservation"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["getReservation"])]
     private ?\DateTimeInterface $date_reservation = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getReservation"])]
     private ?utilisateur $id_utilisateur = null;
 
     /**
@@ -28,6 +32,11 @@ class Reservation
      */
     #[ORM\OneToMany(targetEntity: DetailReservation::class, mappedBy: 'idReservation')]
     private Collection $detailReservations;
+
+    #[ORM\ManyToOne(inversedBy: 'status')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getReservation"])]
+    private ?StatusReservation $statusReservation = null;
 
     public function __construct()
     {
@@ -89,6 +98,18 @@ class Reservation
                 $detailReservation->setIdReservation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatusReservation(): ?StatusReservation
+    {
+        return $this->statusReservation;
+    }
+
+    public function setStatusReservation(?StatusReservation $statusReservation): static
+    {
+        $this->statusReservation = $statusReservation;
 
         return $this;
     }

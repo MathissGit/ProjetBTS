@@ -30,7 +30,7 @@ final class UtilisateurController extends AbstractController
 
     // Getteur sur un utilisateur unique
     #[Route('/api/utilisateurs/{id}', name: 'detailUtilisateur', methods:['GET'])]
-    public function getUtilisateur(Utilisateur $utilisateur, SerializerInterface $serializer, ) : JsonResponse
+    public function getUtilisateur(Utilisateur $utilisateur, SerializerInterface $serializer) : JsonResponse
     {
         $jsonutilisateur = $serializer->serialize($utilisateur, 'json', ["groups" => "getUtilisateurs"]);
         return new JsonResponse($jsonutilisateur, Response::HTTP_OK, [], true);
