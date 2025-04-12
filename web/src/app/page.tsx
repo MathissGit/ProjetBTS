@@ -38,7 +38,7 @@ export default function Home() {
           <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-b border-black pt-10 pb-10 sm:mt-16 sm:pt-10 sm:pb-10 lg:mx-0 lg:max-w-none lg:grid-cols-3">
 
             {Produits.map((produit) => (
-                <article key={produit.id} className="flex max-w-xl flex-col items-start justify-between border-2 border-solid p-4 bg-yellow-950 hover:not-focus:bg-yellow-900">
+                <article key={produit.id} className="flex max-w-xl flex-col items-start justify-between border-2 border-solid p-4 bg-yellow-700 hover:not-focus:bg-yellow-800">
                     <Link href={`/produits/${produit.id}`}>
                       <div className="flex items-center gap-x-4 text-xs">
                           <img alt="" src={produit.imageURL} />
