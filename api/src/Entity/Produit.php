@@ -15,15 +15,15 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getProduits"])]
+    #[Groups(["getProduits", "getReservation"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(["getProduits"])]
+    #[Groups(["getProduits", "getReservation"])]
     private ?string $nom = null;
 
     #[ORM\Column]
-    #[Groups(["getProduits"])]
+    #[Groups(["getProduits", "getReservation"])]
     private ?float $prix = null;
 
     #[ORM\Column(type: Types::TEXT)]

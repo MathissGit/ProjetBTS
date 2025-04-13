@@ -31,6 +31,7 @@ class Reservation
      * @var Collection<int, DetailReservation>
      */
     #[ORM\OneToMany(targetEntity: DetailReservation::class, mappedBy: 'idReservation')]
+    #[Groups(["getReservation"])]
     private Collection $detailReservations;
 
     #[ORM\ManyToOne(inversedBy: 'status')]

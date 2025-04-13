@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DetailReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DetailReservationRepository::class)]
 class DetailReservation
@@ -15,6 +16,7 @@ class DetailReservation
 
     #[ORM\ManyToOne(inversedBy: 'detailReservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getReservation"])]
     private ?Produit $idProduit = null;
 
     #[ORM\ManyToOne(inversedBy: 'detailReservations')]
@@ -22,6 +24,7 @@ class DetailReservation
     private ?Reservation $idReservation = null;
 
     #[ORM\Column]
+    #[Groups(["getReservation"])]
     private ?int $quantite = null;
 
     public function getId(): ?int
