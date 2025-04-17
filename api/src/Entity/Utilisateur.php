@@ -6,11 +6,13 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur implements PasswordAuthenticatedUserInterface
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,31 +20,37 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
     #[Groups(["getUtilisateurs", "getReservation"])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
-    private ?string $nom = null;
-
-    #[ORM\Column(length: 100)]
-    #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
-    private ?string $prenom = null;
-
-    #[ORM\Column(length: 200)]
+    #[ORM\Column(length: 180)]
     #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(["setUtilisateurPassword"])]
-    private ?string $mdp = null;
-
-    #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
-    #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
     #[Groups(["getUtilisateurs"])]
-    private ?role $id_role = null;
+    private array $roles = [];
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    #[Groups(["setUtilisateurPassword"])]
+    private ?string $password = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(["getUtilisateurs", "setUtilisateur", "getReservation"])]
+    private ?string $prenom = null;
 
     /**
      * @var Collection<int, Reservation>
      */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'id_utilisateur', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'idUtilisateur')]
+    // #[Groups(["getUtilisateurs"])]
     private Collection $reservations;
 
     public function __construct()
@@ -53,6 +61,76 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = "ROLE_USER";
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getNom(): ?string
@@ -78,46 +156,14 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getMdp(): ?string
-    {
-        return $this->mdp;
-    }
-
-    public function setMdp(string $mdp): static
-    {
-        $this->mdp = $mdp;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->mdp;
-    }
-
-    public function getIdRole(): ?role
-    {
-        return $this->id_role;
-    }
-
-    public function setIdRole(?role $id_role): static
-    {
-        $this->id_role = $id_role;
-
-        return $this;
+    
+    /**
+     * Méthode getUsername qui permet de retourner le champ qui est utilisé pour l'authentification.
+     *
+     * @return string
+     */
+    public function getUsername(): string {
+        return $this->getUserIdentifier();
     }
 
     /**

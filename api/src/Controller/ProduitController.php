@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Produit;
 use App\Repository\ProduitRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -37,6 +37,7 @@ final class ProduitController extends AbstractController
 
     // Create un produit
     #[Route('/api/produits', name: 'createProduit', methods: ['POST'])]
+    #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour créer un produit")]
     public function createProduit(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): JsonResponse
     {
         $produit = $serializer->deserialize($request->getContent(), Produit::class, 'json');
@@ -52,6 +53,7 @@ final class ProduitController extends AbstractController
 
     // Supprimer un produit
     #[Route('/api/produits/{id}', name: 'deleteProduit', methods: ['DELETE'])]
+    #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour supprimer un produit")]
     public function deleteProduit(Produit $produit, EntityManagerInterface $em): JsonResponse {
         $em->remove($produit);
         $em->flush();
@@ -60,6 +62,7 @@ final class ProduitController extends AbstractController
 
     // Modifier un produit
     #[Route('/api/produits/{id}', name: 'updateProduit', methods: ['PUT'])]
+    #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour modifier un produit")]
     public function updateProduit(Produit $curentProduit, Request $request, SerializerInterface $serializer, EntityManagerInterface $em): JsonResponse 
     {
         $updateProduit = $serializer->deserialize($request->getContent(), Produit::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $curentProduit]);

@@ -22,11 +22,6 @@ class Reservation
     #[Groups(["getReservation"])]
     private ?\DateTimeInterface $date_reservation = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getReservation"])]
-    private ?utilisateur $id_utilisateur = null;
-
     /**
      * @var Collection<int, DetailReservation>
      */
@@ -38,6 +33,14 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(["getReservation"])]
     private ?StatusReservation $statusReservation = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["getReservation"])]
+    private ?\DateTimeInterface $derniersModifStatus = null;
+
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Utilisateur $idUtilisateur = null;
 
     public function __construct()
     {
@@ -57,18 +60,6 @@ class Reservation
     public function setDateReservation(\DateTimeInterface $date_reservation): static
     {
         $this->date_reservation = $date_reservation;
-
-        return $this;
-    }
-
-    public function getIdUtilisateur(): ?utilisateur
-    {
-        return $this->id_utilisateur;
-    }
-
-    public function setIdUtilisateur(?utilisateur $id_utilisateur): static
-    {
-        $this->id_utilisateur = $id_utilisateur;
 
         return $this;
     }
@@ -111,6 +102,30 @@ class Reservation
     public function setStatusReservation(?StatusReservation $statusReservation): static
     {
         $this->statusReservation = $statusReservation;
+
+        return $this;
+    }
+
+    public function getDerniersModifStatus(): ?\DateTimeInterface
+    {
+        return $this->derniersModifStatus;
+    }
+
+    public function setDerniersModifStatus(\DateTimeInterface $derniersModifStatus): static
+    {
+        $this->derniersModifStatus = $derniersModifStatus;
+
+        return $this;
+    }
+
+    public function getIdUtilisateur(): ?Utilisateur
+    {
+        return $this->idUtilisateur;
+    }
+
+    public function setIdUtilisateur(?Utilisateur $idUtilisateur): static
+    {
+        $this->idUtilisateur = $idUtilisateur;
 
         return $this;
     }
