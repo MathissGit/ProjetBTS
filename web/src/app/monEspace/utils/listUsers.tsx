@@ -27,7 +27,6 @@ export async function listUsers() {
         );
     }
   } catch (error) {
-    console.error("Erreur de connexion:", error);
     throw new Error("Erreur réseau ou serveur");
   }
 }

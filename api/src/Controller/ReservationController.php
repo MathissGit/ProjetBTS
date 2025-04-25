@@ -8,6 +8,7 @@ use App\Repository\ProduitRepository;
 use App\Repository\ReservationRepository;
 use App\Repository\StatusReservationRepository;
 use App\Repository\UtilisateurRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,7 +42,7 @@ final class ReservationController extends AbstractController
 
     // creation d'une reservation
     #[Route('/api/reservations', name: 'createReservation', methods: ['POST'])]
-    #[IsGranted("ROLE_USER", "ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour faire une reservation")]
+    #[IsGranted("ROLE_USER", message: "Vous n'avez pas les droits suffisant pour faire une reservation")]
     public function createReservation(
         Request $request,
         SerializerInterface $serializer,
@@ -57,8 +58,8 @@ final class ReservationController extends AbstractController
 
         // Gestion des dates
         try {
-            $reservation->setDateReservation(new \DateTime($content['dateReservation']));
-            $reservation->setDerniersModifStatus(new \DateTime($content['derniersModifStatus']));
+            $reservation->setDateReservation(new \DateTime);
+            $reservation->setDerniersModifStatus(new \DateTime);
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'Format de date invalide'], Response::HTTP_BAD_REQUEST);
         }
@@ -71,7 +72,7 @@ final class ReservationController extends AbstractController
         $reservation->setIdUtilisateur($utilisateur);
 
         // Gestion du statut de réservation
-        $idStatus = 1; // par defaut il est 1: en attente
+        $idStatus = 1; 
         $status = $statusReservationRepository->find($idStatus);
         if (!$status) {
             return new JsonResponse(['error' => 'StatusReservation ID '.$idStatus.' non trouvé'], Response::HTTP_BAD_REQUEST);
@@ -112,7 +113,6 @@ final class ReservationController extends AbstractController
             $em->persist($detailReservation);
             $reservation->addDetailReservation($detailReservation);
 
-            // Décrément du stock
             $produit->setStock($produit->getStock() - $quantiteDemandee);
         }
 
@@ -124,7 +124,7 @@ final class ReservationController extends AbstractController
         return new JsonResponse($jsonReservation, Response::HTTP_CREATED, ['Location' => $location], true);
     }
 
-
+    // Update une reservation
     #[Route('/api/reservations/{id}', name: 'updateReservation', methods: ['PUT'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour modifier cette reservation")]
     public function updateReservation(

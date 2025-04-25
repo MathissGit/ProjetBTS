@@ -15,7 +15,6 @@ export async function listProducts() {
       throw new Error(data.message || 'Erreur lors de la récupération des produits');
     }
   } catch (error) {
-    console.error('Erreur de connexion:', error);
     throw new Error('Erreur réseau ou serveur');
   }
 }

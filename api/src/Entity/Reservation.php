@@ -31,7 +31,7 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'status')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getReservation"])]
+    #[Groups(["getReservation", "getStatus"])]
     private ?StatusReservation $statusReservation = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -40,6 +40,7 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getReservation"])]
     private ?Utilisateur $idUtilisateur = null;
 
     public function __construct()

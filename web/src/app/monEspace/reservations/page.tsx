@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 
-export default function Produit() {
+export default function Reservation() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     
     useEffect(() => {
@@ -26,23 +26,18 @@ export default function Produit() {
             ) : (
                 <div className="border border-black p-8 rounded-lg mx-auto space-y-6">
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/produits/updateStock'>
-                            <h2 className="text-xl font-semibold text-black">Gérer les stocks</h2>
+                        <a href='/monEspace/reservations/updateReservation'>
+                            <h2 className="text-xl font-semibold text-black">Mise à jour d'une réservation</h2>
                         </a>
                     </section>
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/produits/createProduit'>
-                            <h2 className="text-xl font-semibold text-black">(TODO) Créer un produit</h2>
+                        <a href='/monEspace/reservations/createReservation'>
+                            <h2 className="text-xl font-semibold text-black">Créer une réservation</h2>
                         </a>
                     </section>
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/produits/updateStock'>
-                            <h2 className="text-xl font-semibold text-black">(TODO) Supprimer un produit</h2>
-                        </a>
-                    </section>
-                    <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/produits/updateStock'>
-                            <h2 className="text-xl font-semibold text-black">(TODO) Modifier les details d'un produit</h2>
+                        <a href='/monEspace/reservations/deleteReservation'>
+                            <h2 className="text-xl font-semibold text-black">Supprimer une réservation</h2>
                         </a>
                     </section>
                 </div>

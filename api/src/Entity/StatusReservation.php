@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\StatusReservationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -15,6 +14,7 @@ class StatusReservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getReservation", "getStatus"])]
     private ?int $id = null;
 
     /**
@@ -24,7 +24,7 @@ class StatusReservation
     private Collection $status;
 
     #[ORM\Column(length: 255)]
-    #[Groups("getReservation")]
+    #[Groups(["getReservation", "getStatus"])]
     private ?string $label = null;
 
     public function __construct()

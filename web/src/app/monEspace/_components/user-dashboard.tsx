@@ -22,7 +22,7 @@ export default function AdminPage() {
       </section>
 
       <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-        <a href="">
+        <a href="/monEspace/reservations">
             <h2 className="text-xl font-semibold mb-4 text-black">Gestion des réservations</h2>
             <p className="text-gray-800">Modifiez les statuts, validez ou supprimez des réservations.</p>
         </a>
