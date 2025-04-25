@@ -1,4 +1,4 @@
-export async function updateProductStock(id: number) {
+export async function deleteProduitAction(id: number) {
     try {
       const token = localStorage.getItem('auth_token');
 
