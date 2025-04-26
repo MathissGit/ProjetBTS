@@ -17,7 +17,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   const fetchProduit = async () => {
     try {
-      const url = `https://127.0.0.1:8000/api/produits/${id}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/produits/${id}`;
       const res = await fetch(url);
       const data = await res.json();
       setProduit(data);

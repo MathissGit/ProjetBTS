@@ -8,7 +8,7 @@ export default function CreateReservation() {
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0]); // format yyyy-mm-dd
+  const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [users, setUsers] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [message, setMessage] = useState("");

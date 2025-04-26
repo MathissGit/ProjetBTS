@@ -1,5 +1,3 @@
-
-
 export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-black bg-orange-100 dark:bg-gray-800 dark:border-gray-700">

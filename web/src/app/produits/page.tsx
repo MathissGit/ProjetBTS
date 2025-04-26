@@ -8,7 +8,7 @@ export default function produits() {
 
     const produits = async () => {
       try {
-        const url = "https://127.0.0.1:8000/api/produits";
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/produits`;
         const res = await fetch(url);
         const valeur = await res.json();
         setProduits(valeur);
