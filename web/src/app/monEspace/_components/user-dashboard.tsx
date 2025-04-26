@@ -27,7 +27,7 @@ export default function AdminPage() {
             <p className="text-gray-800">Mise à jour des reservations, création ou suppression d'une réservations</p>
         </a>
       </section>
-      <section className='p-3 rounded-lg w-fit bg-red-950 hover:bg-red-900 border border-black'>
+      <section className='p-3 rounded-lg w-fit bg-red-600 hover:bg-red-700 border border-black'>
         <button onClick={handleUserDeconnection} className='text-xl text-white'>
             Déconnexion
         </button>

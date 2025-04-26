@@ -42,7 +42,7 @@ export default function DeleteReservation() {
 
     return (
         <div className="space-y-4">
-        <h1 className="text-2xl font-bold text-center">Liste des réservations</h1>
+        <h1 className="text-2xl font-bold text-center text-yellow-700">Supprimer une réservations</h1>
 
         {loading && <p className="text-yellow-700 text-center">Chargement...</p>}
         {error && <p className="text-red-600 text-center">{error}</p>}
@@ -67,9 +67,9 @@ export default function DeleteReservation() {
                         <h3 className="text-xl font-semibold">
                         {r.nom} {r.prenom}
                         </h3>
-                        <p className="text-black">Email : <u className="text-gray-700">{r.idUtilisateur?.email}</u></p>
-                        <p className="text-black">Date de réservation : <u className="text-gray-700">{new Date(r.date_reservation).toLocaleDateString()}</u></p>
-                        <p className="text-black">Statut : <u className="text-gray-700">{r.statusReservation?.label ?? "N/A"}</u></p>
+                        <p className="text-black">Email : <u className="text-gray-700 font-semibold">{r.idUtilisateur?.email}</u></p>
+                        <p className="text-black">Date de réservation : <u className="text-gray-700 font-semibold">{new Date(r.date_reservation).toLocaleDateString()}</u></p>
+                        <p className="text-black">Statut : <u className="text-gray-700 font-semibold">{r.statusReservation?.label ?? "N/A"}</u></p>
                     </div>
 
                     {showAlert && (
@@ -80,7 +80,7 @@ export default function DeleteReservation() {
 
                     <button
                         onClick={() => handleDelete(r.id)}
-                        className="bg-red-600 hover:bg-red-500 text-white rounded-lg p-2 border border-black"
+                        className="bg-red-600 hover:bg-red-700 text-white rounded-lg p-2 border border-black"
                     >
                         Supprimer la réservation
                     </button>

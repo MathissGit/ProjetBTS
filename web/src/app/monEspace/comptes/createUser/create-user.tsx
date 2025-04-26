@@ -54,7 +54,7 @@ export default function CreateUserForm() {
       onSubmit={handleSubmit}
       className="max-w-lg mx-auto p-4 border border-black rounded-lg space-y-4"
     >
-      <h2 className="text-xl font-bold text-center">Créer un utilisateur</h2>
+      <h2 className="text-xl font-bold text-center text-yellow-700">Créer un utilisateur</h2>
 
       <div>
         <label className="block font-medium">Nom</label>
@@ -64,7 +64,7 @@ export default function CreateUserForm() {
           placeholder="Dupond"
           onChange={(e) => setNom(e.target.value)}
           required
-          className="w-full border border-black p-2 rounded"
+          className="w-full border border-black p-2 rounded-lg"
         />
       </div>
 
@@ -76,7 +76,7 @@ export default function CreateUserForm() {
           placeholder="Jean"
           onChange={(e) => setPrenom(e.target.value)}
           required
-          className="w-full border border-black p-2 rounded"
+          className="w-full border border-black p-2 rounded-lg"
         />
       </div>
 
@@ -88,7 +88,7 @@ export default function CreateUserForm() {
           placeholder="email@exemple.com"
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full border border-black p-2 rounded"
+          className="w-full border border-black p-2 rounded-lg"
         />
       </div>
 
@@ -99,7 +99,7 @@ export default function CreateUserForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full border border-black p-2 rounded"
+          className="w-full border border-black p-2 rounded-lg"
         />
       </div>
 
@@ -108,7 +108,7 @@ export default function CreateUserForm() {
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="w-full border border-black p-2 rounded"
+          className="w-full border border-black p-2 rounded-lg"
         >
           {availableRoles.map((r) => (
             <option key={r} value={r}>
@@ -120,7 +120,7 @@ export default function CreateUserForm() {
 
       <button
         type="submit"
-        className="bg-green-500 text-black border border-black px-4 py-2 rounded"
+        className="bg-green-600 hover:bg-green-700 text-white border border-black px-4 py-2 rounded-lg"
       >
         Créer
       </button>

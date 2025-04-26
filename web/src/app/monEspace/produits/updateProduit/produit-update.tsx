@@ -62,7 +62,7 @@ export default function UpdateProduct() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-center">Mise à jour des produits</h1>
+      <h1 className="text-2xl font-bold text-center text-yellow-700">Mise à jour des produits</h1>
 
       {loading && <p className="text-yellow-700 text-center">Chargement...</p>}
       {error && <p className="text-red-600 text-center">{error}</p>}
@@ -76,44 +76,46 @@ export default function UpdateProduct() {
             key={product.id}
             className="p-4 border border-black rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
           >
+            <span className="font-semibold text-xl">ID : <u>{product.id}</u></span>
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-4 items-start sm:items-center">
-              <span className="font-semibold">ID : {product.id}</span>
 
-              <label className="flex flex-col text-sm">
+              <label className="flex flex-col text-black">
                 Nom :
                 <input
                   type="text"
                   value={editing[product.id]?.nom || ''}
                   onChange={(e) => handleChange(product.id, 'nom', e.target.value)}
-                  className="border border-black rounded p-1"
+                  className="w-fit p-2 border border-black rounded-lg"
                 />
               </label>
+              
 
-              <label className="flex flex-col text-sm">
+              <label className="flex flex-col text-black">
                 Prix (€) :
                 <input
                   type="number"
                   step="0.01"
                   value={editing[product.id]?.prix || 0}
                   onChange={(e) => handleChange(product.id, 'prix', e.target.value)}
-                  className="border border-black rounded p-1 w-24"
+                  className="w-fit p-2 border border-black rounded-lg"
                 />
               </label>
+              
 
-              <label className="flex flex-col text-sm">
+              <label className="flex flex-col text-black">
                 Stock :
                 <input
                   type="number"
                   value={editing[product.id]?.stock || 0}
                   onChange={(e) => handleChange(product.id, 'stock', e.target.value)}
-                  className="border border-black rounded p-1 w-20"
+                  className="w-fit p-2 border border-black rounded-lg"
                 />
               </label>
             </div>
 
             <button
               onClick={() => handleValidation(product.id)}
-              className="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded border border-black"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 w-fit p-2 border border-black rounded-lg"
             >
               Valider
             </button>

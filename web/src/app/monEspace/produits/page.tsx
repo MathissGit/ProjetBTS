@@ -31,18 +31,13 @@ export default function Produit() {
                         </a>
                     </section>
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
+                        <a href='/monEspace/produits/updateProduit'>
+                            <h2 className="text-xl font-semibold text-black">Modifier les details d'un produit</h2>
+                        </a>
+                    </section>
+                    <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
                         <a href='/monEspace/produits/deleteProduit'>
                             <h2 className="text-xl font-semibold text-black">Supprimer un produit</h2>
-                        </a>
-                    </section>
-                    <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/produits/updateProduit'>
-                            <h2 className="text-xl font-semibold text-black">(TODO) Modifier les details d'un produit</h2>
-                        </a>
-                    </section>
-                    <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/produits/updateStock'>
-                            <h2 className="text-xl font-semibold text-black">Gérer les stocks</h2>
                         </a>
                     </section>
                 </div>

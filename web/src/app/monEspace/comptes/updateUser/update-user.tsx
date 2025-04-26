@@ -70,7 +70,7 @@ export default function UsersUpdate() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold text-center">Liste des utilisateurs</h1>
+      <h1 className="text-2xl font-bold text-center text-yellow-700">Modifier un compte utilisateur</h1>
 
       {loading && <p className="text-yellow-700 text-center">Chargement...</p>}
       {error && <p className="text-red-600 text-center">{error}</p>}
@@ -123,7 +123,7 @@ export default function UsersUpdate() {
 
               <button
                 onClick={() => handleValidation(user.id)}
-                className="bg-green-400 rounded-lg p-2 border border-black"
+                className="bg-green-600 hover:bg-green-700 text-white rounded-lg p-2 border border-black"
               >
                 Valider
               </button>

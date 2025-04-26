@@ -74,7 +74,7 @@ export default function UpdatereservationList() {
 
     return (
         <div className="space-y-4">
-            <h1 className="text-2xl font-bold text-center">Liste des réservations</h1>
+            <h1 className="text-2xl font-bold text-center text-yellow-700">Mise à jour des réservations</h1>
 
             {loading && <p className="text-yellow-700 text-center">Chargement...</p>}
             {error && <p className="text-red-600 text-center">{error}</p>}
@@ -113,7 +113,7 @@ export default function UpdatereservationList() {
 
                             <button
                                 onClick={() => handleReservationValidation(reservation.id)}
-                                className="bg-green-400 rounded-lg p-2 border text-black border-black"
+                                className="bg-green-600 hover:bg-green-700 rounded-lg p-2 border text-white border-black"
                             >
                                 Valider
                             </button>

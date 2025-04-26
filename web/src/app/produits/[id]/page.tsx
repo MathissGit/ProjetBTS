@@ -79,6 +79,8 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <em>Téléphone : <u className="text-orange-500">06 12 34 56 78</u></em>
                 <br />
                 <em>E-mail : <u className="text-orange-500">BrasserieTS@email.com</u></em>
+                <br />
+                <em>Application mobile : <span className="text-orange-500">Téléchargez l'application mobile pour réserver directement depuis votre smartphone</span></em>
                 </p>
                 <p className="text-xl text-gray-900 pb-6">
                   Une fois votre demande reçue, nous vous guiderons dans les étapes de réservation et de paiement.

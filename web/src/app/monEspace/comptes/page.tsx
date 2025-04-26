@@ -30,13 +30,13 @@ export default function Compte() {
                         </a>
                     </section>
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/comptes/deleteUser'>
-                            <h2 className="text-xl font-semibold text-black">Supprimer un compte client</h2>
+                        <a href='/monEspace/comptes/updateUser'>
+                            <h2 className="text-xl font-semibold text-black">Modifier un compte client</h2>
                         </a>
                     </section>
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/comptes/updateUser'>
-                            <h2 className="text-xl font-semibold text-black">Modifier un compte client</h2>
+                        <a href='/monEspace/comptes/deleteUser'>
+                            <h2 className="text-xl font-semibold text-black">Supprimer un compte client</h2>
                         </a>
                     </section>
                 </div>

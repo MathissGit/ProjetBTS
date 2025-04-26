@@ -26,13 +26,13 @@ export default function Reservation() {
             ) : (
                 <div className="border border-black p-8 rounded-lg mx-auto space-y-6">
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/reservations/updateReservation'>
-                            <h2 className="text-xl font-semibold text-black">Mise à jour d'une réservation</h2>
+                        <a href='/monEspace/reservations/createReservation'>
+                            <h2 className="text-xl font-semibold text-black">Créer une réservation</h2>
                         </a>
                     </section>
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
-                        <a href='/monEspace/reservations/createReservation'>
-                            <h2 className="text-xl font-semibold text-black">Créer une réservation</h2>
+                        <a href='/monEspace/reservations/updateReservation'>
+                            <h2 className="text-xl font-semibold text-black">Mise à jour d'une réservation</h2>
                         </a>
                     </section>
                     <section className="p-6 rounded-lg border border-black hover:bg-gray-100">
