@@ -4,8 +4,8 @@ nelmio_api_doc:
     documentation:
         info:
             title: Documentation API Brasserie TS
-            description: Une api 
-            version: 2.0.0
+            description: "Cette documentation permet de comprendre le fonctionnement de l'API REST derrière la Brasserie TS. Cette API est utilisée pour le contexte 1 (site web) et le contexte 2 (application mobile). Les méthodes existantes sont toutes documentées ici et implémenter dans les contextes des projets. \n\n Pour faire des requêtes sur l'API vous devez être logger et récupérer un Token. \n- Rubrique Token, faire une requête et récupérer le Token \n- Insérer le Token dans 'Authorize' sous la forme : Bearer {Token}" 
+            version: 1.0.0
         paths:
             /api/login_check:
                 post:

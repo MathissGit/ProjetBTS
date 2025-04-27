@@ -10,9 +10,16 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
+use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes as OA;
+
 final class StatusController extends AbstractController
 {
-    // getteur sur tous les status
+    /**
+     * Permet de récupérer le status des réservations actuel
+     */
+    #[OA\Tag(name: 'Réservations')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/status', name: 'getStatus', methods:['GET'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour voir les status")]
     public function getStatus(StatusReservationRepository $statusReservationRepository, SerializerInterface $serializer): JsonResponse 

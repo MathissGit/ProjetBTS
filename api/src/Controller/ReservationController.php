@@ -19,9 +19,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
+use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes as OA;
+
 final class ReservationController extends AbstractController
 {
-    // getteur sur toute les reservations
+    /**
+     * Permet de récupérer l'ensemble des réservations
+     */
+    #[OA\Tag(name: 'Réservations')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/reservations', name: 'getReservations', methods:['GET'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour voir toute les reservations")]
     public function getReservations(ReservationRepository $reservationRepository, SerializerInterface $serializer): JsonResponse 
@@ -31,7 +38,11 @@ final class ReservationController extends AbstractController
         return new JsonResponse($JsonReservationList, Response::HTTP_OK, [], true);
     }
 
-    // Getteur sur une seule reservation
+    /**
+     * Permet de récupérer une réservation grace à son identifiant
+     */
+    #[OA\Tag(name: 'Réservations')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/reservations/{id}', name:'getOneReservation', methods:['GET'])]
     #[IsGranted("ROLE_USER", "ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour voir cette reservation")]
     public function getOneReservation(SerializerInterface $serializer, Reservation $reservation): JsonResponse
@@ -40,7 +51,11 @@ final class ReservationController extends AbstractController
         return new JsonResponse($jsonReservation, Response::HTTP_OK, [], true);
     }
 
-    // creation d'une reservation
+    /**
+     * Permet de créer une réservation
+     */
+    #[OA\Tag(name: 'Réservations')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/reservations', name: 'createReservation', methods: ['POST'])]
     #[IsGranted("ROLE_USER", message: "Vous n'avez pas les droits suffisant pour faire une reservation")]
     public function createReservation(
@@ -124,7 +139,11 @@ final class ReservationController extends AbstractController
         return new JsonResponse($jsonReservation, Response::HTTP_CREATED, ['Location' => $location], true);
     }
 
-    // Update une reservation
+    /**
+     * Permet la mise à jour d'une réservation grace a son identifiant
+     */
+    #[OA\Tag(name: 'Réservations')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/reservations/{id}', name: 'updateReservation', methods: ['PUT'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour modifier cette reservation")]
     public function updateReservation(
@@ -205,22 +224,23 @@ final class ReservationController extends AbstractController
     }
     
 
-    // Supprimer une reservation
+    /**
+     * Permet de supprimer une réservation grace à son identifiant
+     */
+    #[OA\Tag(name: 'Réservations')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/reservations/{id}', name: 'deleteReservation', methods:['DELETE'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour supprimer cette reservation")]
     public function deleteReservation(Reservation $reservation, EntityManagerInterface $em): JsonResponse
     {
-        // Avant de supprimer la réservation, on rétablit le stock des produits
         foreach ($reservation->getDetailReservations() as $detailReservation) {
             $produit = $detailReservation->getIdProduit();
             $produit->setStock($produit->getStock() + $detailReservation->getQuantite());
             $em->persist($produit);
 
-            // Supprimer les détails de réservation
             $em->remove($detailReservation);
         }
 
-        // Supprimer la réservation
         $em->remove($reservation);
         $em->flush();
 

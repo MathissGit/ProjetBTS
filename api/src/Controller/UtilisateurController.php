@@ -18,10 +18,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
+use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes as OA;
+
 final class UtilisateurController extends AbstractController
 {
 
-    // Getteur sur tout les utilisateur
+    /**
+     * Permet de récupérer l'ensemble des utilisateurs
+     */
+    #[OA\Tag(name: 'Utilisateurs')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/utilisateurs', name: 'utilisateurs', methods:['GET'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour voir les utilisateurs")]
     public function getAllUtilisateurs(UtilisateurRepository $utilisateurRepository, SerializerInterface $serializer): JsonResponse
@@ -31,7 +38,11 @@ final class UtilisateurController extends AbstractController
         return new JsonResponse($jsutilisateursList, Response::HTTP_OK, [], true); 
     }
 
-    // Getteur sur un utilisateur unique
+    /**
+     * Permet de récupérer un utilisateur grace à son identifiant
+     */
+    #[OA\Tag(name: 'Utilisateurs')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/utilisateurs/{id}', name: 'detailUtilisateur', methods:['GET'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour voir un utilisateur")]
     public function getUtilisateur(Utilisateur $utilisateur, SerializerInterface $serializer) : JsonResponse
@@ -40,7 +51,11 @@ final class UtilisateurController extends AbstractController
         return new JsonResponse($jsonutilisateur, Response::HTTP_OK, [], true);
     }
 
-    // Create un utilisateur
+    /**
+     * Permet de créer un utilisateur
+     */
+    #[OA\Tag(name: 'Utilisateurs')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/utilisateurs', name: 'createUtilisateur', methods:['POST'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour créer un utilisateur")]
     public function createUtilisateur(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, UserPasswordHasherInterface $passwordHasher): JsonResponse
@@ -67,7 +82,11 @@ final class UtilisateurController extends AbstractController
         return new JsonResponse($jsonutilisateur, Response::HTTP_CREATED, ['Location'=>$location], true);
     }
 
-    // Supprimer un utilisateur
+    /**
+     * Permet de supprimer un utilisateur grace à son identifiant
+     */
+    #[OA\Tag(name: 'Utilisateurs')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/utilisateurs/{id}', name: 'deleteUtilisateur', methods:['DELETE'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour supprimer un utilisateur")]
     public function deleteUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $em): JsonResponse {
@@ -76,7 +95,11 @@ final class UtilisateurController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    // Modifier un utilisateur 
+    /**
+     * Permet de modifier les informations d'un utilisateur grace à son identifiant
+     */
+    #[OA\Tag(name: 'Utilisateurs')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/utilisateurs/{id}', name:"updateUtilisateurs", methods:['PUT'])]
     #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour modifier un utilisateur")]
     public function updateUtilisateur(Request $request, SerializerInterface $serializer, Utilisateur $currentUtilisateur, EntityManagerInterface $em): JsonResponse 
@@ -88,7 +111,11 @@ final class UtilisateurController extends AbstractController
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
    }
    
-   // modifier un mot de passe 
+   /**
+     * Permet de modifier le mot de passe d'un utilisateur grace à son identifiant
+     */
+    #[OA\Tag(name: 'Utilisateurs')]
+    #[Security(name: 'Bearer')]
    #[Route('/api/utilisateurs/{id}/password', name: "updateUtilisateursPassword", methods: ['PUT'])]
    #[IsGranted("ROLE_USER", message: "Vous n'avez pas les droits suffisant pour modifier un mot de passe utilisateur")]
     public function updateUtilisateurPassword(
@@ -123,7 +150,11 @@ final class UtilisateurController extends AbstractController
         return new JsonResponse(['success' => 'Mot de passe mis à jour avec succès.'], JsonResponse::HTTP_OK);
     }
 
-    // Verifier un utilisateur
+    /**
+     * Permet de verifier l'existence d'un utilisateur lors de la connexion et lui attribuer un token
+     */
+    #[OA\Tag(name: 'Utilisateurs')]
+    #[Security(name: 'Bearer')]
     #[Route('/api/login', name: 'verifyUtilisateur', methods: ['POST'])]
     public function verifyUtilisateur(
         Request $request,
@@ -162,7 +193,7 @@ final class UtilisateurController extends AbstractController
     
         return new JsonResponse([
             'token' => $token,
-            'utilisateur' => json_decode($jsonUtilisateur), // pour éviter un double json_encode
+            'utilisateur' => json_decode($jsonUtilisateur), 
             'redirect' => '/monEspace'
         ]);
     }
