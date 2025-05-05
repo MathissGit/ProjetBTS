@@ -71,7 +71,6 @@ final class ReservationController extends AbstractController
 
         $reservation = new Reservation();
 
-        // Gestion des dates
         try {
             $reservation->setDateReservation(new \DateTime);
             $reservation->setDerniersModifStatus(new \DateTime);
@@ -79,14 +78,12 @@ final class ReservationController extends AbstractController
             return new JsonResponse(['error' => 'Format de date invalide'], Response::HTTP_BAD_REQUEST);
         }
 
-        // Gestion de l'utilisateur
         $utilisateur = $utilisateurRepository->find($content['idUtilisateur']);
         if (!$utilisateur) {
             return new JsonResponse(['error' => 'Utilisateur non trouvé'], Response::HTTP_BAD_REQUEST);
         }
         $reservation->setIdUtilisateur($utilisateur);
 
-        // Gestion du statut de réservation
         $idStatus = 1; 
         $status = $statusReservationRepository->find($idStatus);
         if (!$status) {
@@ -96,7 +93,6 @@ final class ReservationController extends AbstractController
 
         $em->persist($reservation);
 
-        // Gestion des détails de réservation
         if (!isset($content['detailReservations']) || !is_array($content['detailReservations']) || empty($content['detailReservations'])) {
             return new JsonResponse(['error' => 'Aucun détail de réservation fourni'], Response::HTTP_BAD_REQUEST);
         }
@@ -157,13 +153,11 @@ final class ReservationController extends AbstractController
     {
         $content = $request->toArray();
     
-        // Vérifier que la réservation existe avec l'ID de l'URL
         $reservation = $reservationRepository->find($id);
         if (!$reservation) {
             return new JsonResponse(['error' => 'Réservation non trouvée'], Response::HTTP_NOT_FOUND);
         }
     
-        // Vérifier si un nouveau statusReservation est fourni
         if (!empty($content['statusReservation'])) {
             $statusReservation = $statusReservationRepository->find($content['statusReservation']);
             if (!$statusReservation) {
@@ -174,7 +168,6 @@ final class ReservationController extends AbstractController
             $reservation->setDerniersModifStatus(new \DateTime());
         }
     
-        // On rétablit le stock initial pour tous les anciens détails
         foreach ($reservation->getDetailReservations() as $existingDetail) {
             $produit = $existingDetail->getIdProduit();
             $produit->setStock($produit->getStock() + $existingDetail->getQuantite());
@@ -183,7 +176,6 @@ final class ReservationController extends AbstractController
             $em->remove($existingDetail);
         }
     
-        // Vérifier et ajouter les nouveaux détails de réservation
         if (!empty($content['detailReservations'])) {
             foreach ($content['detailReservations'] as $detail) {
                 $produit = $produitRepository->find($detail['idProduit']);
