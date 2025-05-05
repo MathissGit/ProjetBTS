@@ -4,8 +4,11 @@ import 'package:mobile/config/config.dart';
 import 'dart:convert';
 
 import 'package:mobile/data/models/login_data.dart';
+import 'package:mobile/data/notifiers.dart';
 import 'package:mobile/views/screens/forgoten_password_page.dart';
 import 'package:mobile/views/screens/registre_page.dart';
+import 'package:mobile/views/widget_tree.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,7 +18,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginData? _data;
   bool _loading = false;
   String _email = '';
   String _password = '';
@@ -24,16 +26,36 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final result = await loginUser(email, password);
       if (result != null) {
-        setState(() {
-          _data = result;
-        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString(
+          'user',
+          jsonEncode({
+            'id': result.id,
+            'token': result.token,
+            'roles': result.roles,
+            'email': result.email,
+            'nom': result.nom,
+            'prenom': result.prenom,
+          }),
+        );
+
+        selectedPageNotifier.value = 2;
+
+        if (context.mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const WidgetTree()),
+            (route) => false,
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Échec de la connexion. Vérifiez vos identifiants.')),
+          const SnackBar(
+            content: Text('Échec de la connexion. Vérifiez vos identifiants.'),
+          ),
         );
       }
     } catch (e) {
-      print('Erreur lors de la connexion : $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erreur serveur. Réessayez plus tard.')),
       );
@@ -65,7 +87,6 @@ class _LoginPageState extends State<LoginPage> {
         utilisateur['prenom'],
       );
     } else {
-      print('Erreur: ${response.statusCode} - ${response.body}');
       return null;
     }
   }
@@ -73,18 +94,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    } else if (_data != null) {
-      return AuthUserInformationWidget(
-        loginData: _data!,
-        onLogout: () {
-          setState(() {
-            _data = null;
-          });
-        },
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     } else {
       return FormAuthWidget(
         onLogin: () {
@@ -110,11 +120,11 @@ class _LoginPageState extends State<LoginPage> {
 
 class FormAuthWidget extends StatelessWidget {
   const FormAuthWidget({
-    Key? key,
+    super.key,
     required this.onLogin,
     required this.onPasswordChange,
     required this.onLoginChange,
-  }) : super(key: key);
+  });
 
   final Function onLogin;
   final Function(String) onPasswordChange;
@@ -291,46 +301,6 @@ class FormAuthWidget extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class AuthUserInformationWidget extends StatelessWidget {
-  const AuthUserInformationWidget({
-    Key? key,
-    required this.loginData,
-    required this.onLogout,
-  }) : super(key: key);
-
-  final LoginData loginData;
-  final Function onLogout;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Bienvenue ${loginData.prenom} ${loginData.nom}',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Vous êtes connecté',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                onLogout();
-              },
-              child: const Text('Déconnexion'),
-            ),
-          ],
-        ),
       ),
     );
   }
