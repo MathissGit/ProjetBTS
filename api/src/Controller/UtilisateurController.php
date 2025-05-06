@@ -88,12 +88,32 @@ final class UtilisateurController extends AbstractController
     #[OA\Tag(name: 'Utilisateurs')]
     #[Security(name: 'Bearer')]
     #[Route('/api/utilisateurs/{id}', name: 'deleteUtilisateur', methods: ['DELETE'])]
-    #[IsGranted("ROLE_ADMIN", message: "Vous n'avez pas les droits suffisant pour supprimer un utilisateur")]
-    public function deleteUtilisateur(Utilisateur $utilisateur, EntityManagerInterface $em): JsonResponse
-    {
-        $em->remove($utilisateur);
-        $em->flush();
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    #[IsGranted("ROLE_USER", message: "Vous n'avez pas les droits suffisants pour supprimer un utilisateur")]
+    public function deleteUtilisateur(
+        Utilisateur $utilisateur,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        $user = $this->getUser();
+
+        if (!$user instanceof Utilisateur) {
+            return new JsonResponse(['error' => 'Utilisateur authentifié invalide.'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
+        if ($user->getId() !== $utilisateur->getId()) {
+            return new JsonResponse(
+                ['error' => 'Vous ne pouvez supprimer que votre propre compte.'],
+                JsonResponse::HTTP_FORBIDDEN
+            );
+        }
+
+        try {
+            $em->remove($utilisateur);
+            $em->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Erreur lors de la suppression du compte.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse(['success' => 'Compte supprimé avec succès.'], JsonResponse::HTTP_NO_CONTENT);
     }
 
     /**
@@ -123,12 +143,22 @@ final class UtilisateurController extends AbstractController
         Request $request,
         Utilisateur $currentUtilisateur,
         EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
     ): JsonResponse {
+        $user = $this->getUser();
+
+        if (!$user instanceof Utilisateur) {
+            return new JsonResponse(['error' => 'Utilisateur authentifié invalide.'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
+        if ($user->getId() !== $currentUtilisateur->getId()) {
+            return new JsonResponse(['error' => 'Vous ne pouvez pas modifier le mot de passe d\'un autre utilisateur.'], JsonResponse::HTTP_FORBIDDEN);
+        }
+
         $content = $request->toArray();
 
         if (empty($content['ancienPassword']) || empty($content['nouveauPassword'])) {
-            return new JsonResponse(['error' => 'Ancien et nouveau mot de passe sont requis.'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Ancien et nouveau mot de passe sont requis'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $ancienPassword = $content['ancienPassword'];
@@ -141,8 +171,12 @@ final class UtilisateurController extends AbstractController
         $hashedPassword = $passwordHasher->hashPassword($currentUtilisateur, $nouveauPassword);
         $currentUtilisateur->setPassword($hashedPassword);
 
-        $em->persist($currentUtilisateur);
-        $em->flush();
+        try {
+            $em->persist($currentUtilisateur);
+            $em->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Erreur lors de la mise à jour du mot de passe.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return new JsonResponse(['success' => 'Mot de passe mis à jour avec succès.'], JsonResponse::HTTP_OK);
     }
