@@ -1,12 +1,18 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:mobile/data/services/cart_service.dart';
 import 'package:mobile/data/models/product_data.dart';
 
-class CardProduct extends StatelessWidget {
+class CardProduct extends StatefulWidget {
   final ProductData product;
-
   const CardProduct({super.key, required this.product});
+
+  @override
+  State<CardProduct> createState() => _CardProductState();
+}
+
+class _CardProductState extends State<CardProduct> {
+  int _quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +37,9 @@ class CardProduct extends StatelessWidget {
               top: Radius.circular(20.0),
             ),
             child:
-                product.image != null
+                widget.product.image != null
                     ? Image.memory(
-                      base64Decode(product.image!),
+                      base64Decode(widget.product.image!),
                       width: double.infinity,
                       height: 150,
                       fit: BoxFit.cover,
@@ -49,7 +55,7 @@ class CardProduct extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.nom,
+                  widget.product.nom,
                   style: TextStyle(
                     fontSize: 24,
                     color: Colors.grey.shade900,
@@ -58,17 +64,80 @@ class CardProduct extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  product.description,
+                  widget.product.description,
                   style: TextStyle(fontSize: 14, color: Colors.grey.shade900),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '${product.prix.toStringAsFixed(2)} €',
+                  '${widget.product.prix.toStringAsFixed(2)} €',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Color.fromRGBO(108, 88, 76, 1),
                   ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    const Text("Quantité :"),
+                    const SizedBox(width: 8),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.shade400),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: () {
+                              setState(() {
+                                if (_quantity > 1) _quantity--;
+                              });
+                            },
+                          ),
+                          Text(
+                            '$_quantity',
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {
+                                _quantity++;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    ElevatedButton(
+                      onPressed: () {
+                        final CartService _cartService = CartService();
+                        _cartService.addToCart(widget.product, _quantity);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '$_quantity x ${widget.product.nom} ajouté au panier',
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orangeAccent,
+                      ),
+                      child: const Text(
+                        "Ajouter au panier",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
