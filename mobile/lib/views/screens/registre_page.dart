@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:mobile/config/config.dart';
 import 'package:mobile/views/screens/login_page.dart';
+import 'package:mobile/views/widget_tree.dart';
 
 class RegistrePage extends StatefulWidget {
   const RegistrePage({super.key});
@@ -41,7 +42,10 @@ class _RegistrePageState extends State<RegistrePage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Compte créé avec succès !')),
         );
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WidgetTree()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Erreur lors de la création du compte')),

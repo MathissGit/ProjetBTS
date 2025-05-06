@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile/views/screens/login_page.dart';
 import 'package:mobile/views/screens/registre_page.dart';
+import 'package:mobile/views/widget_tree.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/config/config.dart';
@@ -390,7 +391,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const LoginPage(),
+                                    builder: (context) => WidgetTree(),
                                   ),
                                 );
                               },
