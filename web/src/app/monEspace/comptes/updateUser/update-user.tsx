@@ -22,7 +22,7 @@ export default function UsersUpdate() {
         setUsers(users);
 
         const rolesSet = new Set<string>();
-        users.forEach((user) => {
+        users.forEach((user: { roles: string[]; }) => {
           user.roles.forEach((role: string) => rolesSet.add(role));
         });
 
