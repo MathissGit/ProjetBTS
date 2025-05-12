@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/io_client.dart';
 import 'package:mobile/data/models/cart_item.dart';
 import 'package:mobile/data/services/cart_service.dart';
 import 'package:mobile/data/notifiers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile/config/config.dart';
 
 class CartPage extends StatefulWidget {
@@ -19,12 +20,17 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _sendReservation() async {
     try {
+      final ioClient = HttpClient();
+      ioClient.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      final client = IOClient(ioClient);
+
       final prefs = await SharedPreferences.getInstance();
       final userData = jsonDecode(prefs.getString('user')!);
       final token = userData['token'];
       final idUtilisateur = userData['id'];
 
-      final response = await http.post(
+      final response = await client.post(
         Uri.parse('${Config.apiUrl}/reservations'),
         headers: {
           'Content-Type': 'application/json',
@@ -50,6 +56,7 @@ class _CartPageState extends State<CartPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Erreur réseau')));
+      debugPrint('Erreur: $e');
     }
   }
 
@@ -72,7 +79,16 @@ class _CartPageState extends State<CartPage> {
           valueListenable: cartNotifier,
           builder: (context, cartItems, _) {
             if (cartItems.isEmpty) {
-              return const Center(child: Text('Votre panier est vide', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),));
+              return const Center(
+                child: Text(
+                  'Votre panier est vide',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              );
             }
 
             return Column(

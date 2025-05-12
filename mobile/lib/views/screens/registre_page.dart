@@ -1,7 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'dart:convert';
-
 import 'package:mobile/config/config.dart';
 import 'package:mobile/views/screens/login_page.dart';
 import 'package:mobile/views/widget_tree.dart';
@@ -27,6 +27,11 @@ class _RegistrePageState extends State<RegistrePage> {
 
     setState(() => _loading = true);
 
+    final ioClient = HttpClient();
+    ioClient.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+    final client = IOClient(ioClient);
+
     final url = Uri.parse('${Config.apiUrl}/register');
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
@@ -37,7 +42,7 @@ class _RegistrePageState extends State<RegistrePage> {
     });
 
     try {
-      final response = await http.post(url, headers: headers, body: body);
+      final response = await client.post(url, headers: headers, body: body);
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Compte créé avec succès !')),
@@ -55,6 +60,7 @@ class _RegistrePageState extends State<RegistrePage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Erreur réseau')));
+      debugPrint('Erreur lors de la création du compte: $e');
     } finally {
       setState(() => _loading = false);
     }

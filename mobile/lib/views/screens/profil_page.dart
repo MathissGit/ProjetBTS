@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/io_client.dart';
 import 'package:mobile/views/screens/login_page.dart';
 import 'package:mobile/views/screens/registre_page.dart';
 import 'package:mobile/views/widget_tree.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile/config/config.dart';
 
 class ProfilPage extends StatefulWidget {
@@ -39,24 +40,30 @@ class _ProfilPageState extends State<ProfilPage> {
   }
 
   Future<void> _updatePassword(String oldPassword, String newPassword) async {
-    final prefs = await SharedPreferences.getInstance();
-    final userData = jsonDecode(prefs.getString('user')!);
-    final token = userData['token'];
-
-    final url = Uri.parse(
-      '${Config.apiUrl}/utilisateurs/${user!['id']}/password',
-    );
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-    final body = jsonEncode({
-      'ancienPassword': oldPassword,
-      'nouveauPassword': newPassword,
-    });
-
     try {
-      final response = await http.put(url, headers: headers, body: body);
+      final prefs = await SharedPreferences.getInstance();
+      final userData = jsonDecode(prefs.getString('user')!);
+      final token = userData['token'];
+
+      final ioClient = HttpClient();
+      ioClient.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      final client = IOClient(ioClient);
+
+      final url = Uri.parse(
+        '${Config.apiUrl}/utilisateurs/${userData['id']}/password',
+      );
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      final body = jsonEncode({
+        'ancienPassword': oldPassword,
+        'nouveauPassword': newPassword,
+      });
+
+      final response = await client.put(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -84,19 +91,25 @@ class _ProfilPageState extends State<ProfilPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erreur serveur. Réessayez plus tard')),
       );
+      debugPrint('Erreur lors de la mise à jour du mot de passe: $e');
     }
   }
 
   Future<void> _deleteAccount() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userData = jsonDecode(prefs.getString('user')!);
-    final token = userData['token'];
-
-    final url = Uri.parse('${Config.apiUrl}/utilisateurs/${user!['id']}');
-    final headers = {'Authorization': 'Bearer $token'};
-
     try {
-      final response = await http.delete(url, headers: headers);
+      final prefs = await SharedPreferences.getInstance();
+      final userData = jsonDecode(prefs.getString('user')!);
+      final token = userData['token'];
+
+      final ioClient = HttpClient();
+      ioClient.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      final client = IOClient(ioClient);
+
+      final url = Uri.parse('${Config.apiUrl}/utilisateurs/${userData['id']}');
+      final headers = {'Authorization': 'Bearer $token'};
+
+      final response = await client.delete(url, headers: headers);
 
       if (response.statusCode == 204 || response.statusCode == 200) {
         await prefs.clear();
@@ -118,6 +131,7 @@ class _ProfilPageState extends State<ProfilPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erreur serveur. Réessayez plus tard')),
       );
+      debugPrint('Erreur lors de la suppression du compte: $e');
     }
   }
 

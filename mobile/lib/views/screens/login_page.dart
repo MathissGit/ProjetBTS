@@ -1,8 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:mobile/config/config.dart';
 import 'dart:convert';
-
 import 'package:mobile/data/models/login_data.dart';
 import 'package:mobile/data/notifiers.dart';
 import 'package:mobile/views/screens/forgoten_password_page.dart';
@@ -67,26 +67,37 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<LoginData?> loginUser(String email, String password) async {
-    final url = Uri.parse('${Config.apiUrl}/login');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({'email': email, 'password': password});
+    try {
+      final ioClient = HttpClient();
+      ioClient.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      final client = IOClient(ioClient);
 
-    final response = await http.post(url, headers: headers, body: body);
+      final url = Uri.parse('${Config.apiUrl}/login');
+      final headers = {'Content-Type': 'application/json'};
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      final utilisateur = json['utilisateur'];
-      final token = json['token'];
+      final body = jsonEncode({'email': email, 'password': password});
 
-      return LoginData(
-        utilisateur['id'],
-        token,
-        List<String>.from(utilisateur['roles']),
-        utilisateur['email'],
-        utilisateur['nom'],
-        utilisateur['prenom'],
-      );
-    } else {
+      final response = await client.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        final utilisateur = json['utilisateur'];
+        final token = json['token'];
+
+        return LoginData(
+          utilisateur['id'],
+          token,
+          List<String>.from(utilisateur['roles']),
+          utilisateur['email'],
+          utilisateur['nom'],
+          utilisateur['prenom'],
+        );
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Erreur lors de la connexion: $e');
       return null;
     }
   }
