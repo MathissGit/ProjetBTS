@@ -115,8 +115,8 @@ class _CardProductState extends State<CardProduct> {
                     const Spacer(),
                     ElevatedButton(
                       onPressed: () {
-                        final CartService _cartService = CartService();
-                        _cartService.addToCart(widget.product, _quantity);
+                        final CartService cartService = CartService();
+                        cartService.addToCart(widget.product, _quantity);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
