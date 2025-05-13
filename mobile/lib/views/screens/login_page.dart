@@ -5,7 +5,7 @@ import 'package:mobile/config/config.dart';
 import 'dart:convert';
 import 'package:mobile/data/models/login_data.dart';
 import 'package:mobile/data/notifiers.dart';
-import 'package:mobile/views/screens/forgoten_password_page.dart';
+// import 'package:mobile/views/screens/forgoten_password_page.dart';
 import 'package:mobile/views/screens/registre_page.dart';
 import 'package:mobile/views/widget_tree.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -230,27 +230,27 @@ class FormAuthWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ForgotenPasswordPage(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Mot de passe oublié?',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                            color: Color.fromRGBO(169, 132, 103, 1),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: GestureDetector(
+                    //     onTap: () {
+                    //       Navigator.of(context).push(
+                    //         MaterialPageRoute(
+                    //           builder: (context) => ForgotenPasswordPage(),
+                    //         ),
+                    //       );
+                    //     },
+                    //     child: const Text(
+                    //       'Mot de passe oublié?',
+                    //       style: TextStyle(
+                    //         fontWeight: FontWeight.bold,
+                    //         fontSize: 17,
+                    //         color: Color.fromRGBO(169, 132, 103, 1),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 20),
                     SizedBox(
                       height: 60,
                       width: 300,
